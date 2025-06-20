@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Death Star Battles - Canvas Simulation</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #000000;
+            color: #FFFFFF;
+            display: flex;
+            flex-direction: column;
+        }
+
+        body>div {
+            text-align: center;
+            padding-top: 30px;
+        }
+
+        canvas {
+            border: 1px solid #343434;
+        }
+
+        input {
+            width: 800px;
+        }
+    </style>
+</head>
+
+<body>
+    <div>
+        <canvas id="gravityCanvas" width="900" height="600"></canvas>
+        <canvas id="extraCanvas" width="900" height="600" style="display:none"></canvas>
+    </div>
+    <div>
+        <label for="angle">Angle</label>
+        <input type="range" id="angle" name="angle" min="0" max="359" value="0" step="1" />
+    </div>
+    <div>
+        <label for="power">Power</label>
+        <input type="range" id="power" name="power" min="0" max="800" value="90" step="10" />
+    </div>
+    <div>
+        <button id="update">Start Game</button>
+        <button id="valueOf">&lt;x&gt; players</button>
+        <button id="white">&lt;ascent&gt; stations/player</button>
+        <button id="yellow">Cpu: cleverbot</button>
+        <button id="Z">1 human 1 cpu</button>
+        <button id="C">More Options...</button>
+        <button id="B">Hyperspace</button>
+        <button id="D">End Turn</button>
+    </div>
+    <script src="utils.js"></script>
+    <script src="gravity.js"></script>
+    <script>
+        gravityapplet();
+        init();
+    </script>
+</body>
+
+</html>
