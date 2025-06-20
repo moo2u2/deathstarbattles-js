@@ -3,7 +3,8 @@ const extraCanvas = document.getElementById('extraCanvas');
 const ctx = canvas.getContext('2d');
 const extraCtx = extraCanvas.getContext('2d');
 
-let /* int */ finishedDrawingDebugInfo;
+let isMouseDown = false;
+let /* int */ finishedDrawing;
 let /*Font */ firstFont;
 let /* Font */ secondFont;
 let /* int */ maxNumOfPlanets = 16;
@@ -44,7 +45,7 @@ let /* int */ tornamentmode = 0;
 let /* int */ gameNumber = 0;
 let /* int */ stationType = 0;
 let /* int */ currentNumberOfStations = 0;
-let /* int */ nextDouble = 0;
+let /* int */ maxButtonStates = 0;
 let /* int */ nextGaussian = 0;
 let /* int */ preferredLayoutSize = 0;
 let /* int */ random = 0;
@@ -82,8 +83,8 @@ let /* Button */  D;
 //    Thread F;
 let /* boolean */  J;
 let /* int */ showTitleScreen = 0;
-let /* double */  resizeRatio = 0.0;
-let /* double */  freeArea = 0.0;
+let resizeRatio = 0.0;
+let freeArea = 0.0;
 let /*Color[]*/ planetColours;
 let /* double[] */ planetX;
 let /* double[] */ planetY;
@@ -94,7 +95,7 @@ let /* double[] */ planetNumber;
 let /* double[] */ planetGravityMaybe;
 let /* int[] */ R;
 let /* double[] */ planetDoubleNumber;
-let /* double */  totalMass;
+let totalMass;
 let /*Color[]*/ teamColours;
 let /*Color[]*/ teamColoursColour;
 let /* double[] */ stationX;
@@ -117,8 +118,8 @@ let /* int */ m = 0;
 let /* int */ n = 100;
 let /* int[] */ teleports;
 let /* let /* int[][] */ nTeleports;
-let /* double */  q = 0.0;
-let /* double */  r = 0.0;
+let q = 0.0;
+let r = 0.0;
 let /* int[] */ totalPower;
 let /* int[] */ vengencekills;
 let /* int[] */ strategykills;
@@ -195,33 +196,33 @@ let /* let /* int[][] */ shotTailY;
 let /* int[] */ PZ;
 let /* int[] */ QZ;
 let /* int[] */ pathl;
-let /* double */  TZ = 0.0;
-let /* double */  UZ = 0.0;
-let /* double */  VZ = 0.0;
+let TZ = 0.0;
+let UZ = 0.0;
+let VZ = 0.0;
 let /*Color[]*/ WZ;
-let /* double */  timeStep = 0.0;
-let /* double */  iZ = 0.0;
+let timeStep = 0.0;
+let iZ = 0.0;
 let /* int */ currentStep = 0;
 let /* int */ prtUpper = 0;
-let /* double */  onePoint0 = 0.0;
-let /* double */  ratioZeroPoint8 = 0.0;
-let /* double */  zeroPoint2 = 0.0;
-let /* double */  fourPoint0 = 0.0;
-let /* double */  eightPoint0 = 0.0;
-// let /* double */  aZ;
+let onePoint0 = 0.0;
+let ratioZeroPoint8 = 0.0;
+let zeroPoint2 = 0.0;
+let fourPoint0 = 0.0;
+let eightPoint0 = 0.0;
+// let  aZ;
 // let eZ;
 let /* int */ topgap = 0;
 let /* int */ bottomgap = 0;
-let /* double */  topgapoverconv = 0.0;
-let /* double */  bottomgapoverconv = 0.0;
+let topgapoverconv = 0.0;
+let bottomgapoverconv = 0.0;
 let /* int */ canvasWidth = 0;
 let /* int */ canvasHeight = 0;
-let /* double */  resizedWidth = 0.0;
-let /* double */  resizedHeight = 0.0;
-let /* double */  negativeResizedWidth = 0.0;
-let /* double */  negativeResizedWidth2 = 0.0;
-let /* double */  doubleResizedWidth = 0.0;
-let /* double */  resizedHeightPlusWidth = 0.0;
+let resizedWidth = 0.0;
+let resizedHeight = 0.0;
+let negativeResizedWidth = 0.0;
+let negativeResizedWidth2 = 0.0;
+let doubleResizedWidth = 0.0;
+let resizedHeightPlusWidth = 0.0;
 
 function init() {
     canvasWidth = canvas.width;
@@ -241,7 +242,12 @@ function init() {
     topgapoverconv = topgap / resizeRatio;
     bottomgapoverconv = bottomgap / resizeRatio;
 
-    canvas.addEventListener('click', mousePressed);
+    canvas.addEventListener('mousedown', () => isMouseDown = true);
+    canvas.addEventListener('mousemove', handleMouseEvent);
+    canvas.addEventListener('mouseup', (e) => {
+        handleMouseEvent(e);
+        isMouseDown = false;
+    });
 
     isInHyperspaceMaybe = 1;
     showTitleScreen = 1;
@@ -299,9 +305,9 @@ function destroy() {
 
 function generateRandomData() {
     try {
-        let /* double */  var1 = 650.0;
-        let /* double */  var3 = 10.0;
-        let /* double */  var5 = 0.15;
+        let var1 = 650.0;
+        let var3 = 10.0;
+        let var5 = 0.15;
         let /* boolean */  negativePlanetsMaybe = false;
         let /* int */ consumedAreaAmtMaybe = 0;
         let /* boolean */  consumedAreaMaybe = false;
@@ -507,13 +513,13 @@ function generateRandomData() {
         drawing2 = 1;
         timeStep = 0.15;
         currentStep = 0;
-        let /* double */  var25 = Math.random();
-        let /* double */  var27 = Math.random();
-        let /* double */  var29 = Math.random();
-        let /* double */  var31 = Math.random();
-        let /* double */  var33 = Math.random();
-        let /* double */  var35 = Math.random();
-        let /* double */  var37 = Math.random();
+        let var25 = Math.random();
+        let var27 = Math.random();
+        let var29 = Math.random();
+        let var31 = Math.random();
+        let var33 = Math.random();
+        let var35 = Math.random();
+        let var37 = Math.random();
         iZ = 0.2;
         EZ = Math.floor(20000.0 * Math.random());
         if (randomStationType == 1) {
@@ -532,12 +538,12 @@ function generateRandomData() {
             }
         }
 
-        let /* double */  var9 = 1.0;
-        let /* double */  var11 = 0.0;
-        let /* double */  var13 = 0.0;
-        let /* double */  var15 = 1.0;
-        let /* double */  var17 = 0.0;
-        let /* double */  var19 = 0.0;
+        let var9 = 1.0;
+        let var11 = 0.0;
+        let var13 = 0.0;
+        let var15 = 1.0;
+        let var17 = 0.0;
+        let var19 = 0.0;
 
         for (let i = 0; i < numberOfPlanets; ++i) {
             planetColours[i] = [150, 120, 80];
@@ -551,7 +557,7 @@ function generateRandomData() {
 
         let /* int */ planetStartIndex = 0;
         let /* byte */  var41 = 1;
-        let /* double */  var7 = 400.0;
+        let var7 = 400.0;
         let /* byte */  var42 = 1;
         let /* int */ var57 = 0;
 
@@ -1924,8 +1930,9 @@ function generateRandomData() {
     }
 }
 
-function mousePressed(/*MouseEvent*/ e) {
-    // requestFocus();
+function handleMouseEvent(e) {
+    if (!isMouseDown) return;
+
     if (currentWinner != -2 && currentMode == 0 && tornamentmode == 1 && gameNumber != 0) {
         somethingLikeStarted2 = 1;
     }
@@ -1935,28 +1942,28 @@ function mousePressed(/*MouseEvent*/ e) {
         stationY[currentStation] = e.offsetY / resizeRatio;
     } else {
         if (currentMode == 0 && ais[activePlayer] == 0 && isInHyperspaceMaybe == 1 && activePlayer < numberOfStations) {
-            let /* double */  var2 = e.offsetX / resizeRatio - stationX[activePlayer];
-            let /* double */  var4 = e.offsetY / resizeRatio - stationY[activePlayer];
-            let /* double */  var12 = 1.0;
-            if (var2 < 0.0) {
+            let insideX = e.offsetX / resizeRatio - stationX[activePlayer];
+            let insideY = e.offsetY / resizeRatio - stationY[activePlayer];
+            let var12 = 1.0;
+            if (insideX < 0.0) {
                 var12 = -1.0;
             }
 
-            let /* double */  var6 = (-(Math.floor(180.0 * Math.atan(var4 / var2) / Math.pi)) + 180 - Math.floor(var12 * 90.0));
-            let /* double */  var8 = Math.sqrt(var2 * var2 + var4 * var4) * resizeRatio;
+            let calculatedAngle = (-(Math.floor(180.0 * Math.atan(insideY / insideX) / Math.PI)) + 180 - Math.floor(var12 * 90.0));
+            let var8 = Math.sqrt(insideX * insideX + insideY * insideY) * resizeRatio;
             if (var8 < 1.2 * f[activePlayer] && var8 > stationRadius[activePlayer]) {
-                currentAngle[activePlayer] = var6;
+                currentAngle[activePlayer] = Math.floor(calculatedAngle);
                 angleSlider.value = 360 - currentAngle[activePlayer];
-                let /* double */  var10 = (var8 - /*(double)*/j[activePlayer]) / (/*(double)*/f[activePlayer] - j[activePlayer]);
-                if (var10 < 0.0) {
-                    var10 = 0.0;
+                let calculatedPower = (var8 - j[activePlayer]) / (f[activePlayer] - j[activePlayer]);
+                if (calculatedPower < 0.0) {
+                    calculatedPower = 0.0;
                 }
 
-                if (var10 > 1.0) {
-                    var10 = 1.0;
+                if (calculatedPower > 1.0) {
+                    calculatedPower = 1.0;
                 }
 
-                currentPower[activePlayer] = Math.floor(800.0 * var10) + 1;
+                currentPower[activePlayer] = Math.floor(800.0 * calculatedPower) + 1;
                 powerSlider.value = currentPower[activePlayer];
             }
         }
@@ -1964,7 +1971,7 @@ function mousePressed(/*MouseEvent*/ e) {
     }
 }
 
-function keyPressed(/*KeyEvent*/ e) {
+function keyPressed(e) {
     let /* int */ keyPressed = e.keyCode;
     keyDown = e.keyCode;
     if (currentMode == 0 && ais[activePlayer] == 0 && isInHyperspaceMaybe == 1 && activePlayer < numberOfStations) {
@@ -1975,7 +1982,7 @@ function keyPressed(/*KeyEvent*/ e) {
                     currentPower[activePlayer] = 800;
                 }
 
-                powerSlider.value = (currentPower[activePlayer]);
+                powerSlider.value = currentPower[activePlayer];
                 break;
             case 75: // k
                 newValue = currentPower[activePlayer]++;
@@ -1983,7 +1990,7 @@ function keyPressed(/*KeyEvent*/ e) {
                     currentPower[activePlayer] = 800;
                 }
 
-                powerSlider.value = (currentPower[activePlayer]);
+                powerSlider.value = currentPower[activePlayer];
             case 76: // l
             default:
                 break;
@@ -1993,7 +2000,7 @@ function keyPressed(/*KeyEvent*/ e) {
                     currentPower[activePlayer] = 0;
                 }
 
-                powerSlider.value = (currentPower[activePlayer]);
+                powerSlider.value = currentPower[activePlayer];
                 break;
             case 78: // n
                 currentPower[activePlayer] -= 10;
@@ -2001,7 +2008,7 @@ function keyPressed(/*KeyEvent*/ e) {
                     currentPower[activePlayer] = 0;
                 }
 
-                powerSlider.value = (currentPower[activePlayer]);
+                powerSlider.value = currentPower[activePlayer];
         }
 
         switch (keyPressed) {
@@ -2054,7 +2061,7 @@ function keyPressed(/*KeyEvent*/ e) {
 
                     if (activePlayer < numberOfStations) {
                         angleSlider.value = (360 - currentAngle[activePlayer]);
-                        powerSlider.value = (currentPower[activePlayer]);
+                        powerSlider.value = currentPower[activePlayer];
 
                         //sleep(100L);
                     }
@@ -2126,7 +2133,7 @@ function keyPressed(/*KeyEvent*/ e) {
 
 }
 
-function keyReleased(/* KeyEvent*/ e) {
+function keyReleased(e) {
     keyDown = 0;
     let /* int */ keyPressed = e.keyCode;
     switch (keyPressed) {
@@ -2149,11 +2156,8 @@ function adjustmentValueChanged(e) {
         angleSlider.value = (360 - currentAngle[activePlayer]);
     } else if (e.target == angleSlider && isInHyperspaceMaybe == 1) {
         currentAngle[activePlayer] = 360 - angleSlider.value;
-    } else {
-        if (e.target == powerSlider && isInHyperspaceMaybe == 1) {
-            currentPower[activePlayer] = powerSlider.value;
-        }
-
+    } else if (e.target == powerSlider && isInHyperspaceMaybe == 1) {
+        currentPower[activePlayer] = powerSlider.value;
     }
 }
 
@@ -2166,12 +2170,8 @@ function run() {
             console.log("How do we get here?");
             //sleep(500);
         } else if (paused && !slowMo) {
-            try {
-                paint();
-                //sleep(100);
-            } catch (var27) {
-                console.error(var27);
-            }
+            paint();
+            //sleep(100);
         } else {
             if (somethingLikeStarted2 == 1) {
                 dataIsReset = 0;
@@ -2198,15 +2198,15 @@ function run() {
                         if (shotStatus[i] == 1) {
                             // Fired
                             for (let j = 0; j < numberOfPlanets; ++j) {
-                                let /* double */  var11 = 1.0;
-                                let /* double */  someXCalc = planetX[j] - smallX[i];
-                                let /* double */  someYCalc = planetY[j] - smallY[i];
-                                let /* double */  someTanCalc = Math.atan(someYCalc / someXCalc);
+                                let var11 = 1.0;
+                                let someXCalc = planetX[j] - smallX[i];
+                                let someYCalc = planetY[j] - smallY[i];
+                                let someTanCalc = Math.atan(someYCalc / someXCalc);
                                 if (someXCalc < 0.0) {
                                     var11 = -1.0;
                                 }
 
-                                let /* double */  sumXsAndYs = someXCalc * someXCalc + someYCalc * someYCalc;
+                                let sumXsAndYs = someXCalc * someXCalc + someYCalc * someYCalc;
                                 if (sumXsAndYs < planetWidthMaybe[j] * planetWidthMaybe[j]) {
                                     if (R[j] == 1) {
                                         shotStatus[i] = 2;
@@ -2223,7 +2223,7 @@ function run() {
                                             var10002 = teleports[i]++;
                                         }
                                     } else {
-                                        let /* double */  var9;
+                                        let var9;
                                         let /* int */ var29;
                                         if (R[j] == 4) {
                                             if (var11 < 0.0) {
@@ -2260,7 +2260,7 @@ function run() {
                                         }
                                     }
                                 } else {
-                                    let /* double */  var16 = var11 * iZ * planetNumber[j] / sumXsAndYs;
+                                    let var16 = var11 * iZ * planetNumber[j] / sumXsAndYs;
                                     let /* double[] */ var10000 = somePowerTimesSin;
                                     var10000[i] += Math.cos(someTanCalc) * var16 * timeStep;
                                     var10000 = somePowerTimesCos;
@@ -2313,7 +2313,7 @@ function run() {
                                         var10002 = bullykills[i]++;
                                     }
 
-                                    let /* double */  var7 = Math.sqrt((stationX[j] - stationX[i]) * (stationX[j] - stationX[i]) + (stationY[j] - stationY[i]) * (stationY[j] - stationY[i]));
+                                    let var7 = Math.sqrt((stationX[j] - stationX[i]) * (stationX[j] - stationX[i]) + (stationY[j] - stationY[i]) * (stationY[j] - stationY[i]));
                                     if (var7 > resizedWidth * q) {
                                         var10002 = longshotkills[i]++;
                                     }
@@ -2420,7 +2420,7 @@ function run() {
                 // if (MathIEEEremainder(currentStep, (shwEvery * everyTen)) == 0.0) {
                 currentTimeForDelay += 40;
                 delaytime = currentTimeForDelay - Date.now();
-                finishedDrawingDebugInfo = 0;
+                finishedDrawing = 0;
                 // startsAt15 = 0;
                 paint();
                 //sleep(Math.max(15, setLayout));
@@ -2466,9 +2466,9 @@ function I() {
         let /* boolean */  var2 = false;
         let /* boolean */  var3 = false;
         let /* boolean */  var4 = false;
-        let /* double */  var21 = 0.0;
-        let /* double */  var23 = 1.0;
-        let /* double */  var25 = 0.0;
+        let var21 = 0.0;
+        let var23 = 1.0;
+        let var25 = 0.0;
         let /* byte */  var32 = 0;
         let /* byte */  var33 = 1;
         let /* byte */  var34 = 20;
@@ -2659,11 +2659,11 @@ function I() {
                 }
             }
 
-            let /* double */  var5;
-            let /* double */  var7;
-            let /* double */  var9;
-            let /* double */  var11;
-            let /* double */  var13;
+            let var5;
+            let var7;
+            let var9;
+            let var11;
+            let var13;
             let /* int */ var27;
             if (ais[activePlayer] == 1) {
                 var13 = Math.random();
@@ -2729,7 +2729,7 @@ function I() {
                     var41 = 800;
                 }
 
-                let /* double */  var17 = IEEEremainder(var40, var41, var28, var34, var35, var32);
+                let var17 = calculateSomeNumber(var40, var41, var28, var34, var35, var32);
                 var38 = var40;
                 var39 = var41;
                 UZ = var17;
@@ -2739,7 +2739,7 @@ function I() {
                     if (var29 >= var33) {
                         var13 = Math.random();
                         if (ais[activePlayer] >= 4) {
-                            let /* double */  var15 = 0.08;
+                            let var15 = 0.08;
                             if (var17 < 50.0) {
                                 var15 = 0.03;
                             } else if (var17 < 200.0) {
@@ -2778,7 +2778,7 @@ function I() {
                         break;
                     }
 
-                    let /* double */  var19;
+                    let var19;
                     if (var28 != activePlayer) {
                         //sleep(5L);
 
@@ -2799,7 +2799,7 @@ function I() {
                             var41 = 800;
                         }
 
-                        var19 = IEEEremainder(var40, var41, var28, var34, var35, var32);
+                        var19 = calculateSomeNumber(var40, var41, var28, var34, var35, var32);
                         if (var19 < var17) {
                             VZ = var19;
                             var39 = var41;
@@ -2839,7 +2839,7 @@ function I() {
                         var41 = Math.floor(Math.random() * 800.0);
                     }
 
-                    var19 = IEEEremainder(var40, var41, var28, var34, var35, var32);
+                    var19 = calculateSomeNumber(var40, var41, var28, var34, var35, var32);
                     if (var19 < var17) {
                         VZ = var19;
                         var39 = var41;
@@ -2862,49 +2862,48 @@ function I() {
     }
 }
 
-
-function /* double */  IEEEremainder(/* int */ var1, /* int */ var2, /* int */ var3, /* int */ var4, /* int */ var5, /* int */ var6) {
-    let /* double */  var7 = (var2 / 1000.0 + zeroPoint2) * ratioZeroPoint8 * Math.sin(var1 / 180.0 * Math.PI);
-    let /* double */  var9 = (var2 / 1000.0 + zeroPoint2) * ratioZeroPoint8 * Math.cos(var1 / 180.0 * Math.PI);
-    let /* double */  var11 = stationX[activePlayer] + (c[activePlayer] + onePoint0) * Math.sin(var1 / 180.0 * Math.PI);
-    let /* double */  var13 = stationY[activePlayer] + (c[activePlayer] + onePoint0) * Math.cos(var1 / 180.0 * Math.PI);
-    let /* boolean */  notDone = true;
-    let /* double */  var23 = 1.0;
-    let /* double */  var37 = var4 * timeStep;
-    let /* int */ var41 = 0;
+function calculateSomeNumber(/* int */ var1, /* int */ var2, /* int */ var3, /* int */ var4, /* int */ var5, /* int */ var6) {
+    let var7 = (var2 / 1000.0 + zeroPoint2) * ratioZeroPoint8 * Math.sin(var1 / 180.0 * Math.PI);
+    let var9 = (var2 / 1000.0 + zeroPoint2) * ratioZeroPoint8 * Math.cos(var1 / 180.0 * Math.PI);
+    let var11 = stationX[activePlayer] + (c[activePlayer] + onePoint0) * Math.sin(var1 / 180.0 * Math.PI);
+    let var13 = stationY[activePlayer] + (c[activePlayer] + onePoint0) * Math.cos(var1 / 180.0 * Math.PI);
+    let notDone = true;
+    let var23 = 1.0;
+    let var37 = var4 * timeStep;
+    let var41 = 0;
     TZ = 0.0;
-    let /* double */  var19 = resizedWidth * resizedWidth;
+    let var19 = resizedWidth * resizedWidth;
 
     while (notDone) {
-        let /* double */  var25;
-        let /* double */  var27;
-        for (let /* int */ var42 = 0; var42 < numberOfPlanets; ++var42) {
+        let var25;
+        let var27;
+        for (let var42 = 0; var42 < numberOfPlanets; ++var42) {
             var23 = 1.0;
             var25 = planetX[var42] - var11;
             var27 = planetY[var42] - var13;
-            let /* double */  var29 = Math.atan(var27 / var25);
+            let var29 = Math.atan(var27 / var25);
             if (var25 < 0.0) {
                 var23 = -1.0;
             }
 
-            let /* double */  var33 = var25 * var25 + var27 * var27;
+            let var33 = var25 * var25 + var27 * var27;
             if (var33 < planetWidthMaybe[var42] * planetWidthMaybe[var42]) {
                 if (R[var42] <= 0 && var6 == 1) {
-                    let /* double */  var31;
+                    let var31;
                     if (var23 < 0.0) {
                         var31 = var29 + Math.PI;
                     } else {
                         var31 = var29;
                     }
 
-                    let /* int */ var22 = -R[var42];
+                    let var22 = -R[var42];
                     var11 = planetX[var22] + Math.cos(var31) * (planetWidthMaybe[var22] + 0.5);
                     var13 = planetY[var22] + Math.sin(var31) * (planetWidthMaybe[var22] + 0.5);
                 } else {
                     notDone = false;
                 }
             } else {
-                let /* double */  var35 = var23 * iZ * planetNumber[var42] / var33;
+                let var35 = var23 * iZ * planetNumber[var42] / var33;
                 if (var35 > 0.3) {
                     notDone = false;
                 }
@@ -2922,7 +2921,7 @@ function /* double */  IEEEremainder(/* int */ var1, /* int */ var2, /* int */ v
         var13 += var9 * var37;
         var25 = stationX[var3] - var11;
         var27 = stationY[var3] - var13;
-        let /* double */  var39 = var25 * var25 + var27 * var27;
+        let var39 = var25 * var25 + var27 * var27;
         if (var39 < var19) {
             var19 = var39;
         }
@@ -2972,10 +2971,10 @@ function shoot() {
     currentMode = 1;
     drawing2 = 1;
     drawing = 1;
-    finishedDrawingDebugInfo = 0;
+    finishedDrawing = 0;
     paused = false;
 
-    while (finishedDrawingDebugInfo == 0) {
+    while (finishedDrawing == 0) {
         paint();
 
         //sleep(200L);
@@ -2986,7 +2985,7 @@ function shoot() {
 }
 
 function addActionListener() {
-    let /* double */  var1 = 130.0;
+    let var1 = 130.0;
     let /* boolean */  var3 = false;
     let /* int */ var4 = 0;
 
@@ -3028,9 +3027,9 @@ function addActionListener() {
                     var3 = true;
                 }
 
-                if (MathIEEEremainder(var4, 500.0) == 0.0) {
-                    //sleep(50L);
-                }
+                // if (MathIEEEremainder(var4, 500.0) == 0.0) {
+                //sleep(50L);
+                // }
             }
 
             currentHyperspace[var5] = 0;
@@ -3098,7 +3097,7 @@ function addAdjustmentListener() {
     if (activePlayer < numberOfStations) {
         isInHyperspaceMaybe = 1;
         angleSlider.value = (360 - currentAngle[activePlayer]);
-        powerSlider.value = (currentPower[activePlayer]);
+        powerSlider.value = currentPower[activePlayer];
     }
 
     let /* int */ var8 = 0;
@@ -3229,7 +3228,7 @@ function paint() {
     update();
 }
 
-function update(/*Graphics var1*/) {
+function update() {
     try {
         let timeStartOfUpdate = Date.now();
         let var40 = new Array(3);
@@ -3261,13 +3260,13 @@ function update(/*Graphics var1*/) {
                             let random3 = resizedHeight * getRandomDouble(0, 1);
                             let random4 = resizedHeight * getRandomDouble(0, 1);
 
-                            let /* double */  var26 = 0.4 * resizedHeight * getRandomDouble(0, 1);
+                            let var26 = 0.4 * resizedHeight * getRandomDouble(0, 1);
                             let /* short */ var28 = 1000;
 
                             for (let j = 0; j < var28; ++j) {
-                                let /* double */  var20 = getNextGaussian() + 0.5;
-                                let /* double */  var22 = random1 + var20 * (random2 - random1);
-                                let /* double */  var24 = random3 + var20 * (random4 - random3);
+                                let var20 = getNextGaussian() + 0.5;
+                                let var22 = random1 + var20 * (random2 - random1);
+                                let var24 = random3 + var20 * (random4 - random3);
                                 extraCtx.fillStyle = WZ[j].darker();
                                 fillOval(extraCtx, Math.floor(var22 + getNextGaussian() * var26), Math.floor(var24 + getNextGaussian() * var26), Math.floor(0.5 * MZ[j]), Math.floor(0.5 * MZ[j]));
                             }
@@ -3388,6 +3387,8 @@ function update(/*Graphics var1*/) {
 
                 ++round;
 
+                // Draw shot trail
+
                 for (let i = 0; i < numberOfStations; ++i) {
                     if (shotStatus[i] > 0) {
                         extraCtx.fillStyle = teamColours[i].darker();
@@ -3495,13 +3496,13 @@ function update(/*Graphics var1*/) {
 
                     if (shotStatus[currentShotIndex] == 1) {
                         ctx.font = firstFont;
-                        let /* double */  var16;
-                        let /* double */  var18;
-                        let /* double */  var30;
-                        let /* double */  var32;
-                        let /* double */  var34;
-                        let /* double */  var36;
-                        let /* double */  var38;
+                        let var16;
+                        let var18;
+                        let var30;
+                        let var32;
+                        let var34;
+                        let var36;
+                        let var38;
 
                         // Shot is off screen - show the triangle indicator
 
@@ -4015,18 +4016,11 @@ function update(/*Graphics var1*/) {
                             ctx.fillStyle = ctx.strokeStyle = 'white';
                             drawOval(ctx, (resizeRatio * stationX[activePlayer]) - f[activePlayer], (resizeRatio * stationY[activePlayer]) - f[activePlayer], 2 * f[activePlayer], 2 * f[activePlayer]);
                             drawLine(ctx, (resizeRatio * stationX[activePlayer]), (resizeRatio * stationY[activePlayer]), (resizeRatio * stationX[activePlayer] + (j[activePlayer] + (f[activePlayer] - j[activePlayer]) * (currentPower[activePlayer] - 1) / 800) * Math.sin(currentAngle[activePlayer] / 180.0 * Math.PI)), (resizeRatio * stationY[activePlayer] + (j[activePlayer] + (f[activePlayer] - j[activePlayer]) * (currentPower[activePlayer] - 1) / 800) * Math.cos(currentAngle[activePlayer] / 180.0 * Math.PI)));
-                            currentTxt = `Power: ${currentPower[activePlayer] / 10.0 + ((1000.0 * zeroPoint2 - 1.0)) / 10.0}`;
-                            if (currentPower[activePlayer] > 800) {
-                                currentTxt = "Power:100";
-                            }
+                            currentTxt = currentPower[activePlayer] > 800 ? "Power:100" : `Power: ${currentPower[activePlayer] / 10.0 + ((1000.0 * zeroPoint2 - 1.0)) / 10.0}`;
 
                             ctx.fillStyle = 'black';
                             ctx.fillText(currentTxt, getCanvasSize().width - ctx.measureText("Power:10.0").width + 3, canvasHeight - 10 - bottomgap + 3);
-                            if (currentPower[activePlayer] == lastPower[activePlayer]) {
-                                ctx.fillStyle = 'yellow';
-                            } else {
-                                ctx.fillStyle = 'white';
-                            }
+                            ctx.fillStyle = (currentPower[activePlayer] == lastPower[activePlayer]) ? 'yellow' : 'white';
 
                             ctx.fillText(currentTxt, getCanvasSize().width - ctx.measureText("Power:10.0").width, canvasHeight - 10 - bottomgap);
                             ctx.fillStyle = 'black';
@@ -4120,7 +4114,7 @@ function update(/*Graphics var1*/) {
                 ctx.fillText("teleports:" + teleports[currentStation] + "t0:" + nTeleports[currentStation][0] + "t1:" + nTeleports[currentStation][1] + "t2:" + nTeleports[currentStation][2] + "t3:" + nTeleports[currentStation][3], canvasWidth / 2, 400);
             }
 
-            finishedDrawingDebugInfo = 1;
+            finishedDrawing = 1;
             drawTime = Date.now() - timeStartOfUpdate;
         }
     } catch (e) {
@@ -4142,7 +4136,7 @@ function gravityapplet() {
     buttonState = 1;
     stationType = 4;
     currentNumberOfStations = 1;
-    nextlet /* double */ = 2;
+    maxButtonStates = 2;
     nextGaussian = 3;
     randomStationType = 4;
     focusedFirstGo = false;
@@ -4485,7 +4479,7 @@ function gravityapplet() {
     C = document.getElementById('C'); // More options
     C.addEventListener('click', () => {
         ++buttonState;
-        if (buttonState > nextDouble) {
+        if (buttonState > maxButtonStates) {
             buttonState = 1;
         }
 
@@ -4728,7 +4722,7 @@ function gravityapplet() {
 
             if (activePlayer < numberOfStations) {
                 angleSlider.value = (360 - currentAngle[activePlayer]);
-                powerSlider.value = (currentPower[activePlayer]);
+                powerSlider.value = currentPower[activePlayer];
 
                 // sleep(100);
             }
